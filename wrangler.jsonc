@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "lerawatch-api",
+  "name": "lerawatch-api-a16d",
   "main": "worker.js",
   "compatibility_date": "2026-09-01"
 }
