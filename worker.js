@@ -24,7 +24,7 @@ export default {
       return json({
         ok: true,
         app: "LeraWatch API",
-        version: "0.5",
+        version: "0.6",
         endpoints: ["/search?q=...", "/watch?id=...&type=movie|tv&region=RU"],
       });
     }
@@ -75,6 +75,7 @@ export default {
       const id = (url.searchParams.get("id") || "").trim();
       const type = (url.searchParams.get("type") || "").trim().toLowerCase();
       const region = ((url.searchParams.get("region") || "RU").trim().toUpperCase());
+      const title = (url.searchParams.get("title") || "").trim();
 
       if (!/^\d+$/.test(id)) {
         return json({ ok: false, error: 'Параметр "id" должен быть TMDB ID' }, 400);
@@ -113,6 +114,7 @@ export default {
             name: p.provider_name,
             priority: p.display_priority ?? null,
             logo: p.logo_path ? `https://image.tmdb.org/t/p/w185${p.logo_path}` : null,
+            url: providerUrl(p.provider_name, title, country.link || null),
           }));
 
         return json({
@@ -162,3 +164,4 @@ async function tmdbError(response, json) {
 function errorMessage(error) {
   return error instanceof Error ? error.message : String(error);
 }
+\n\nfunction providerUrl(providerName, title, fallback) {\n  const name = String(providerName || "").toLowerCase();\n  const q = encodeURIComponent(title || "");\n\n  // Official provider search pages. If a title was not supplied, use the\n  // provider home page. Unknown providers safely fall back to JustWatch.\n  if (name.includes("okko")) {\n    return title ? `https://okko.tv/search?query=${q}` : "https://okko.tv/";\n  }\n  if (name.includes("amediateka") || name.includes("амедиатека")) {\n    return title ? `https://www.amediateka.ru/search?query=${q}` : "https://www.amediateka.ru/";\n  }\n  if (name.includes("tvigle")) {\n    return title ? `https://www.tvigle.ru/search/?q=${q}` : "https://www.tvigle.ru/";\n  }\n  if (name.includes("wink")) {\n    return title ? `https://wink.ru/search?query=${q}` : "https://wink.ru/";\n  }\n  if (name.includes("ivi")) {\n    return title ? `https://www.ivi.ru/search/?q=${q}` : "https://www.ivi.ru/";\n  }\n  if (name.includes("kinopoisk") || name.includes("кинопоиск")) {\n    return title ? `https://www.kinopoisk.ru/index.php?kp_query=${q}` : "https://www.kinopoisk.ru/";\n  }\n  if (name.includes("kion")) {\n    return "https://kion.ru/";\n  }\n  if (name.includes("premier")) {\n    return "https://premier.one/";\n  }\n  if (name.includes("start")) {\n    return "https://start.ru/";\n  }\n\n  return fallback;\n}\n

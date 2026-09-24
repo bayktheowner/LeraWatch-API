@@ -1,16 +1,8 @@
-LeraWatch API v0.5
+LeraWatch API v0.6 — Clickable Providers
 
-Новое:
-GET /watch?id=TMDB_ID&type=movie|tv&region=RU
+Залить worker.js в API GitHub-репозиторий.
+Cloudflare secret TMDB_API_TOKEN не менять.
 
-Категории:
-- flatrate — подписка
-- free — бесплатно
-- ads — бесплатно с рекламой
-- rent — аренда
-- buy — покупка
-
-Данные Watch Providers предоставляются TMDB в партнерстве с JustWatch.
-При показе этих данных в приложении нужна атрибуция JustWatch.
-
-TMDB_API_TOKEN остается Cloudflare Secret — его менять не нужно.
+/watch теперь принимает title и возвращает url для площадки.
+Для известных сервисов используется официальный сайт/поиск сервиса.
+Для неизвестных сервисов fallback — title-specific ссылка JustWatch от TMDB.
